@@ -54,24 +54,19 @@
 import json
 import pickle
 import webbrowser
-
 import requests
+import matplotlib.pyplot as plt
+
+from datetime import datetime
 from bs4 import BeautifulSoup
 
 
 class amazonpy():
-    # default stands for the location of the files
-    product = {}  # --> product = json.load(file)
-    url_list = []
-    default_path = "path"
-    default_header = "header"
+    product = None  # --> product = json.load(file)
 
     # --settings--
     settings = json.load(open("./settings.json"))
     # --settings--
-
-    # header is none just to declare a variable
-    header = None
 
     def __init__(self):
         # 1 path choise
@@ -79,270 +74,187 @@ class amazonpy():
         # 3 checks if there's any data in it
         # 4 checks your user-agent for making sure that you can use the code
 
+        changed = False
         path_choice = ""
-        header = pickle.load(open(self.default_header, "rb"), encoding='bytes')
         print("Would you like to change header?[y/n]")
-        while (True):
+        while True:
             new_header = input()
 
             if path_choice == 'y':
-                try:
-                    file_path = input("Insert the name of the file -->  ")
-                    file = open(file_path, "rb")
-                    self.url_list = pickle.load(file, encoding='bytes')
-                    file.close()
-                except:
-                    print("Error, could not find the file")
+                new_header = input("inserisci in nuovo header: ")
+                if not new_header == "":
+                    self.settings["header"]["User-Agent"] = new_header
+                    changed = True
+                
+                new_prod_file = input("inserisci in nuovo file prodotti: ")
+                if not new_prod_file == "":
+                    self.settings["header"]["productfile"] = new_prod_file
+                    changed = True
 
-                print("would you like to set it as your default path?[y/n]")
-                while (True):
+            break
 
-                    path_default = input()
+        self.product = json.load(open(self.settings["productfile"]))
 
-                    if path_default == 'y':
-
-                        self.default_path = file_path
-                        pickle.dump(path_default, open(self.default_path, "wb"))
-                        break
-
-                    elif path_default == 'n':
-                        break
-
-                    else:
-                        print("Error, Invalid input, try again")
-                break
-
-
-            elif path_choice == 'n':
-
-                # taking the location of the data from the file 'path'
-
-                file = open(self.default_path, "rb")
-                data_file = pickle.load(file, encoding='bytes')
-                file.close()
-                # taking data from the path's data
-                # in sintesi leggi path per prendere la locazione dei dati della lista
-
-                print(data_file)
-                file = open(data_file, "rb")
-                self.url_list = pickle.load(file, encoding='bytes')
-                file.close()
-                break
-
-        changed = False
-        while (True):
+        while True:
             try:
                 # checks the user agent
-                page = requests.get("https://www.google.com", headers=header)
-                self.header = header
+                page = requests.get("https://www.google.com", headers=self.settings["header"])
+
+                if not page.status_code == 200:
+                    print("connection error "+page.status_code+" with the sequent user agent "+self.settings["header"])
+                    return
 
                 if not changed:
                     break
 
-                print("Would you like to set it as your default user agent?")
-                while (True):
+                print("Would you like to save the settings?")
+                while True:
                     choice = input()
                     if choice == 'y':
-
-                        pickle.dump(new_header, open(self.default_header, "wb"))
+                        json.dump(self.settings, open("./settings.json"))
                         break
                     elif choice == 'n':
                         break
                     else:
                         print("Error, invalid input")
             except:
-                print(
-                    "Error, invalid user agent plese insert another user agent(you can find it by typing on google 'what's my user agent')")
-                new_header = input()
+                print("Error, invalid user agent plese insert another user agent(you can find it by typing on google 'what's my user agent')")
+                return
 
-                # for using this library the user-agent must be put in a dictionary
-                # if the the executor for some reason mess up for 2 or more time
-                # you'll be always overwriting the dictionary's value (user-agent)
-
-                # dictionary structure:
-
-                # dict = {'key' : 'value'}
-                #
-                # my_car = {"Tesla" : 4000,
-                #           "Lamborghini" : 20000}
-                #
-                # print(dict[Tesla])
-                # output: 4000
-
-                header["User-Agent"] = new_header
-                changed = True
-                continue
-
-        if len(self.url_list) == 0:
+        if len(self.product) == 0:
             print("There's no data in this file")
         else:
-            print(f'Loaded file, found  {len(self.url_list)}  links')
+            print(f'Loaded file, found  {len(self.product)}  links')
 
     def url_menu(self):
         # this is the part where you manage the links
         changed = False
-        if self.url_list == 0:
+        if len(self.product) == 0:
             print("There's no url")
 
-        print(
-            "What would you like to do?\n1 --> add link        2 --> delete link\n3 --> modify link     4 --> show link\n5 --> save            0 --> exit url_menu")
         while True:
-
+            print("What would you like to do?\n1 --> add link        2 --> delete link\n3 --> modify link     4 --> show link\n5 --> fetch     0 --> exit url_menu")
             # you chose how to manipulate your list
 
             option = int(input("-->"))
             if option == 1:
-                self.url_list.append(input("Insert a link -->"))
+                self.add_product(input("Insert a link -->"))
                 changed = True
             elif option == 2:
-                self.url_list.pop(int(input("Select which number would you like to delete")) - 1)
+                self.remuv_product(int(input("Select which number would you like to delete")) - 1)
                 changed = True
             elif option == 3:
-                self.url_list[int(input("Select which number would you like to modify")) - 1] = input(
-                    "Insert the link --> ")
+                # ToDo self.url_list[int(input("Select which number would you like to modify")) - 1] = input("Insert the link --> ")
                 changed = True
             elif option == 4:
-                for x in range(len(self.url_list)):
-                    print(f'{x + 1}. {self.url_list[x]}')
+                for x in range(len(self.product)):
+                    print(f'{x + 1}. {self.product[x]["productname"]}')
             elif option == 5:
-
-                # extration of the path's data
-                path_file = open(self.default_path, "rb")
-                path = pickle.load(path_file)
-                file = open(path, "wb")
-
-                # saving process
-                pickle.dump(self.url_list, file)
-                path_file.close()
-                file.close()
-                print("Data has been saved")
-                changed = False
+                bot.fetch()
+                print("Fetch process done")
 
             elif option == 0:
                 if not changed:
                     return
 
-                print("Would you like save you changes? [y/n]")
                 while True:
+                    print("Would you like save you changes? [y/n]")
                     save = input("-->")
                     if save == 'y':
-                        # extration of the path's data
-                        path_file = open(self.default_path, "rb")
-                        path = pickle.load(path_file)
-
-                        # saving process
-                        file = open(path, "wb")
-                        pickle.dump(self.url_list, file)
-                        path_file.close()
-                        file.close()
+                        json.dump(self.product, open(self.settings["productfile"], "w"))
                         break
                     elif save == 'n':
                         break
                     else:
                         print("Error, invalid comand, please try again")
 
-
             else:
                 print("Error, invalid input")
 
     def fetch(self):
-        if self.url_list == 0:
+        if len(self.product) == 0:
             print("You can't fetch if there's no data")
             return
 
-        for i in range(len(self.url_list)):
+        for i in range(len(self.product)):
             try:
-
-                # taking the html page code
-                page = requests.get(self.url_list[i], headers=self.header)
-                soup = BeautifulSoup(page.content, 'html.parser')
-                title = soup.find(id='productTitle').get_text()
-                price = soup.find(id='priceblock_ourprice').get_text()
-
-                # price convertion to string to float
-                price = price.replace(',', '.')
-                price = "".join(i for i in price if i != '€')  # price[price.index("€")+1:] by P.
-                converted_price = float(price)
-
-                print(f"{title.strip()} = {converted_price} €")
-
-                # inserting everything into a dictionary
-                self.product[title.strip()] = converted_price
-
+                self.new_detection(i)
             except:
-                # just for helping the user which link is wrong
-                # maybe changing it won't go in this expect block
                 print(f"Error, invalid link number  {i}  ")
-                continue
 
-        # saving process
-        file = open("products", "wb")
-        pickle.dump(self.product, file)
-        file.close()
+    def add_product(self, url):
+        page = requests.get(url, headers=self.settings["header"])
 
-    def compare(self):
-        comp_file = open("products", "rb")
-        self.product = pickle.load(comp_file, encoding='bytes')
+        if not page.status_code == 200:
+            print("connection error "+page.status_code+" try later")
+            return
 
-        # converting the dictionary in a list (only the values)
-        price_list = list(self.product.values())
-        for x in range(len(self.url_list)):
-            try:
-                # takes the intire page data
-                page = requests.get(self.url_list[x], headers=self.header)
+        soup = BeautifulSoup(page.content, 'html.parser')
+        
+        new_product = { 
+            "productname":soup.find(id='productTitle').get_text().replace("\n", ""),
+            "url":url,
+            "detectionprice":[]
+            }
+        self.product.append(new_product)
 
-                # bs4 will try to take all the html content
-                soup = BeautifulSoup(page.content, 'html.parser')
+        json.dump(self.product, open(self.settings["productfile"], "w"))
 
-                # by using bs4 we can ask it to find the title in the html file
-                title = soup.find(id='productTitle').get_text()
+    def new_detection(self, i):
+        page = requests.get(self.product[i]["url"], headers=self.settings["header"])
 
-                price = soup.find(id='priceblock_ourprice').get_text()
-                price = price.replace(',', '.')
-                price = "".join(i for i in price if i != '€')
-                converted_price = float(price)
+        if not page.status_code == 200:
+            print("connection error "+page.status_code+" try later")
+            return
 
-                print(f"Product's n{x} (Before): {price_list[x]} ||| Product's price (Now) {converted_price}")
-                if (price_list[x] > converted_price):
-                    print(
-                        f"!!!Found discount in product's [{title.strip()}] differenze: {price_list[x] - converted_price} euros!!!")
-                    open_choice = input("Would you like to see the discounted product?  y | n \n--->")
-                    if (open_choice == 'y'):
-                        webbrowser.open(self.url_list[x])
-                    else:
-                        continue
-            except:
-                print(f"Error could not find the price in link n{x}")
+        soup = BeautifulSoup(page.content, 'html.parser')
+        price = soup.find(id='priceblock_saleprice')
 
-    def monitor(products, time, period_in_minutes=5):
-        # monitors for a period of time a specific product
-        # time is in minutes
-        # default refresh time is 5 minutes
+        if not price:
+            print("nessun prezzo rilevato")
+            return
 
-        pass
+        price = price.get_text()
+        # price convertion to string to float
+        price = price.replace(',', '.')
+        price = price[:price.index("€")] #"".join(i for i in price if i != '€')  # price[price.index("€")+1:] by P.
+        converted_price = float(price)
 
+        self.product[i]["detectionprice"].append({
+                "price":converted_price,
+                "date": datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+            })
+
+        json.dump(self.product, open(self.settings["productfile"], "w"))
+
+    def remuv_product(self, i):
+        self.product.remove(self.product[i])  
+        json.dump(self.product, open(self.settings["productfile"], "w"))
+
+    def drow_graph(self, i):
+        #todo: fix plot data 
+        fig, ax = plt.subplots()
+
+        prices = []
+        date = []
+
+        for price in self.product[i]["detectionprice"]:
+            prices.append(price["price"])
+            date.append(price["date"])
+
+        '''
+        n, bins, patches = ax.hist(prices, len(self.product), density=True)
+        plt.show()'''
+
+        ax.plot(date, prices)
+        plt.show()
 
 bot = amazonpy()
 
 
 def main():
-    # ricordati di uscire da questa funzione premendo 0 dopo che hai modificato i link
     bot.url_menu()
 
-    print("Would you like to fetch or compare the data? [f/c] or [exit] for kill the program")
-    while (True):
-        choice = input("-->")
-        if choice == 'f':
-            bot.fetch()
-            print("Fetch process done")
-        elif choice == 'c':
-            bot.compare()
-            print("comparing process done")
-        elif choice == "exit":
-            break
-        else:
-            print("Error, invalid input")
-
-
 if __name__ == "__main__":
-    main()
+    #main()
+    bot.drow_graph(0)
