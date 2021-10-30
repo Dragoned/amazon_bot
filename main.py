@@ -182,40 +182,6 @@ class amazonpy():
             except:
                 print(f"Error, invalid link number  {i}  ")
 
-    def compare(self):
-        comp_file = open("products", "rb")
-        self.product = pickle.load(comp_file, encoding='bytes')
-
-        # converting the dictionary in a list (only the values)
-        price_list = list(self.product.values())
-        for x in range(len(self.url_list)):
-            try:
-                # takes the intire page data
-                page = requests.get(self.url_list[x], headers=self.header)
-
-                # bs4 will try to take all the html content
-                soup = BeautifulSoup(page.content, 'html.parser')
-
-                # by using bs4 we can ask it to find the title in the html file
-                title = soup.find(id='productTitle').get_text()
-
-                price = soup.find(id='priceblock_ourprice').get_text()
-                price = price.replace(',', '.')
-                price = "".join(i for i in price if i != '€')
-                converted_price = float(price)
-
-                print(f"Product's n{x} (Before): {price_list[x]} ||| Product's price (Now) {converted_price}")
-                if (price_list[x] > converted_price):
-                    print(
-                        f"!!!Found discount in product's [{title.strip()}] differenze: {price_list[x] - converted_price} euros!!!")
-                    open_choice = input("Would you like to see the discounted product?  y | n \n--->")
-                    if (open_choice == 'y'):
-                        webbrowser.open(self.url_list[x])
-                    else:
-                        continue
-            except:
-                print(f"Error could not find the price in link n{x}")
-
     def add_product(self, url):
         page = requests.get(url, headers=self.settings["header"])
 
@@ -270,13 +236,18 @@ class amazonpy():
         fig, ax = plt.subplots()
 
         prices = []
+        date = []
 
         for price in self.product[i]["detectionprice"]:
             prices.append(price["price"])
+            date.append(price["date"])
 
+        '''
         n, bins, patches = ax.hist(prices, len(self.product), density=True)
-        plt.show()
+        plt.show()'''
 
+        ax.plot(date, prices)
+        plt.show()
 
 bot = amazonpy()
 
