@@ -56,6 +56,7 @@ import pickle
 import webbrowser
 import requests
 import matplotlib.pyplot as plt
+from pynput import keyboard
 
 from datetime import datetime
 from bs4 import BeautifulSoup
@@ -141,14 +142,14 @@ class amazonpy():
                 self.add_product(input("Insert a link -->"))
                 changed = True
             elif option == 2:
-                self.remuv_product(int(input("Select which number would you like to delete")) - 1)
+                self.show_products()
+                self.remove_product(int(input("Select which number would you like to delete")) - 1)
                 changed = True
             elif option == 3:
                 # ToDo self.url_list[int(input("Select which number would you like to modify")) - 1] = input("Insert the link --> ")
                 changed = True
             elif option == 4:
-                for x in range(len(self.product)):
-                    print(f'{x + 1}. {self.product[x]["productname"]}')
+                self.show_products()
             elif option == 5:
                 bot.fetch()
                 print("Fetch process done")
@@ -182,6 +183,40 @@ class amazonpy():
             except:
                 print(f"Error, invalid link number  {i}  ")
 
+    def compare(self):
+        comp_file = open("products", "rb")
+        self.product = pickle.load(comp_file, encoding='bytes')
+
+        # converting the dictionary in a list (only the values)
+        price_list = list(self.product.values())
+        for x in range(len(self.url_list)):
+            try:
+                # takes the intire page data
+                page = requests.get(self.url_list[x], headers=self.header)
+
+                # bs4 will try to take all the html content
+                soup = BeautifulSoup(page.content, 'html.parser')
+
+                # by using bs4 we can ask it to find the title in the html file
+                title = soup.find(id='productTitle').get_text()
+
+                price = soup.find(id='priceblock_ourprice').get_text()
+                price = price.replace(',', '.')
+                price = "".join(i for i in price if i != '€')
+                converted_price = float(price)
+
+                print(f"Product's n{x} (Before): {price_list[x]} ||| Product's price (Now) {converted_price}")
+                if (price_list[x] > converted_price):
+                    print(
+                        f"!!!Found discount in product's [{title.strip()}] differenze: {price_list[x] - converted_price} euros!!!")
+                    open_choice = input("Would you like to see the discounted product?  y | n \n--->")
+                    if (open_choice == 'y'):
+                        webbrowser.open(self.url_list[x])
+                    else:
+                        continue
+            except:
+                print(f"Error could not find the price in link n{x}")
+
     def add_product(self, url):
         page = requests.get(url, headers=self.settings["header"])
 
@@ -207,14 +242,11 @@ class amazonpy():
             print("connection error "+page.status_code+" try later")
             return
 
-        soup = BeautifulSoup(page.content, 'html.parser')
-        price = soup.find(id='priceblock_saleprice')
 
+
+        price = self.find_product(page)
         if not price:
-            print("nessun prezzo rilevato")
             return
-
-        price = price.get_text()
         # price convertion to string to float
         price = price.replace(',', '.')
         price = price[:price.index("€")] #"".join(i for i in price if i != '€')  # price[price.index("€")+1:] by P.
@@ -227,34 +259,74 @@ class amazonpy():
 
         json.dump(self.product, open(self.settings["productfile"], "w"))
 
-    def remuv_product(self, i):
+    def remove_product(self, i):
         self.product.remove(self.product[i])  
         json.dump(self.product, open(self.settings["productfile"], "w"))
+
+    def show_products(self):
+        for x in range(len(self.product)):
+            print(f'{x + 1}. {self.product[x]["productname"]}\n')
+
+    def find_product(self, page):
+        # 1st try
+        soup = BeautifulSoup(page.content, 'html.parser')
+        price = soup.find(id='priceblock_saleprice')
+
+        if not price:
+            # 2nd try
+            price = soup.find(class_='a-price a-text-price a-size-medium apexPriceToPay')
+            if not price:
+                print("nessun prezzo rilevato")
+                print("Si può ipotizzare che il prodotto non è più disponibile")
+            else:
+                print(price)
+
+        return price.get_text()
+
+
+    # todo(dani): implementazione fetch continuo
+
+
+
+    def start_continous_fetch(self):
+        cont = 1
+        is_closed = False
+
+        print("type ")
+
+
+        while(not is_closed):
+            with keyboard.Events() as events:
+                event = events.get(2)
+                if event is not None:
+                    is_closed = True
+
+            for i in range(len(self.product)):
+                self.new_detection(i)
+                print("fecting list process number:", cont)
+                cont += 1
+
+        print("fetch process closed")
+        print("total fetches = ", cont)
 
     def drow_graph(self, i):
         #todo: fix plot data 
         fig, ax = plt.subplots()
 
         prices = []
-        date = []
 
         for price in self.product[i]["detectionprice"]:
             prices.append(price["price"])
-            date.append(price["date"])
 
-        '''
         n, bins, patches = ax.hist(prices, len(self.product), density=True)
-        plt.show()'''
-
-        ax.plot(date, prices)
         plt.show()
+
 
 bot = amazonpy()
 
 
 def main():
-    bot.url_menu()
+    bot.start_continous_fetch()
 
 if __name__ == "__main__":
-    #main()
-    bot.drow_graph(0)
+    main()
