@@ -163,9 +163,10 @@ class amazonpy():
                     save = input("-->")
                     if save == 'y':
                         json.dump(self.product, open(self.settings["productfile"], "w"))
-                        break
+                        return
                     elif save == 'n':
-                        break
+                        return
+
                     else:
                         print("Error, invalid comand, please try again")
 
@@ -229,6 +230,7 @@ class amazonpy():
         new_product = { 
             "productname":soup.find(id='productTitle').get_text().replace("\n", ""),
             "url":url,
+            "tag": soup.find(class_="a-link-normal a-color-tertiary").get_text().replace("  ", "").replace('\n', ''),
             "detectionprice":[]
             }
         self.product.append(new_product)
@@ -283,31 +285,14 @@ class amazonpy():
 
         return price.get_text()
 
-
-    # todo(dani): implementazione fetch continuo
-
-
-
-    def start_continous_fetch(self):
+    def start_continuous_fetch(self, time=1):
         cont = 1
-        is_closed = False
-
-        print("type ")
-
-
-        while(not is_closed):
-            with keyboard.Events() as events:
-                event = events.get(2)
-                if event is not None:
-                    is_closed = True
-
+        while(True):
             for i in range(len(self.product)):
                 self.new_detection(i)
                 print("fecting list process number:", cont)
                 cont += 1
-
-        print("fetch process closed")
-        print("total fetches = ", cont)
+                sleep(time)
 
     def drow_graph(self, i):
         #todo: fix plot data 
@@ -326,7 +311,7 @@ bot = amazonpy()
 
 
 def main():
-    bot.start_continous_fetch()
+    bot.url_menu()
 
 if __name__ == "__main__":
     main()
