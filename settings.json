@@ -1,9 +1,16 @@
 {
-    "productfile":"products.json",
-    "header":{"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36 Edg/93.0.961.47"},
+    "productfile": "products.json",
+    "header": {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36 Edg/93.0.961.47"
+    },
     "delay": {
-        "houre":1,
-        "minutes":30,
-        "second":0
-    }
+        "houre": 1,
+        "minutes": 30,
+        "second": 0
+    },
+    "serchQuery": [
+        "a-size-medium a-color-price",
+        "a-price a-text-price a-size-medium apexPriceToPay",
+        "priceblock_saleprice"
+    ]
 }

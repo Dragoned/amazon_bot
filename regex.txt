@@ -1,1 +1,5 @@
 priceblock
+
+a-size-medium a-color-price
+a-price a-text-price a-size-medium apexPriceToPay
+priceblock_saleprice
