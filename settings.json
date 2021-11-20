@@ -8,9 +8,18 @@
         "minutes": 30,
         "second": 0
     },
+    "DBIP":"85.43.41.198",
+    "DBUser":"AmazonBot",
+    "DBPass":"AmazonBot@2021",
+    "DB":"AmazonBot",
     "serchQuery": [
+        "a-offscreen",
         "a-size-medium a-color-price",
         "a-price a-text-price a-size-medium apexPriceToPay",
         "priceblock_saleprice"
+    ],
+    "catquery":[
+        "nav-a-content",
+        "a-link-normal a-color-tertiary"
     ]
 }

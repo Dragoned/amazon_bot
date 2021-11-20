@@ -3,3 +3,15 @@ priceblock
 a-size-medium a-color-price
 a-price a-text-price a-size-medium apexPriceToPay
 priceblock_saleprice
+a-offscreen
+
+SELECT Prezzi.Prezzo, Prezzi.Date, Prodotti.Nome, Categorie.Nome
+FROM Prezzi
+INNER JOIN Prodotti ON Prezzi.ID_Prodotto = Prodotti.ID
+INNER JOIN Categorie on Prodotti.ID = Categorie.ID
+
+
+SELECT Prodotti.Nome, Prodotti.Link, Categorie.Nome
+FROM Appartenenza
+INNER JOIN Prodotti ON Appartenenza.ID_Prodotto = Prodotti.ID
+INNER JOIN Categorie ON Appartenenza.ID_Categoria = Categorie.ID

@@ -51,18 +51,20 @@
 # bs4 (Beautifull soup 4)
 # request
 
-from os import execlp
-import re
 import json
-import pickle
-import webbrowser
-import requests
-import threading
 import logging
-import matplotlib.pyplot as plt
-
+import pickle
+import re
+import threading
+import webbrowser
 from datetime import datetime
+from os import execlp
+
+import matplotlib.pyplot as plt
+import mysql.connector
+import requests
 from bs4 import BeautifulSoup
+from pypika import Field, MySQLQuery, Query, Table
 
 logging.basicConfig(format='%(asctime)s %(levelname)s - %(funcName)s:%(message)s',
                     filename='amazon_bot.log', encoding='utf-8', level=logging.DEBUG, datefmt='%m/%d/%Y %I:%M:%S %p')
@@ -73,6 +75,15 @@ class amazonpy():
 
     # --settings--
     settings = json.load(open("./settings.json"))
+
+    amazon_db = mysql.connector.connect(
+        host=settings["DBIP"],
+        user=settings["DBUser"],
+        password=settings["DBPass"],
+        database=settings["DB"]
+    )
+
+    amazon_db_cursor = amazon_db.cursor()
 
     def __init__(self):
         # 1 path choise
@@ -99,7 +110,14 @@ class amazonpy():
 
             break
 
-        self.product = json.load(open(self.settings["productfile"]))
+        prodtable = Table('Prodotti')
+
+        query = MySQLQuery.from_(prodtable).select(
+            prodtable.ID, prodtable.LINK)
+
+        self.amazon_db_cursor.execute(query.get_sql())
+
+        self.product = self.amazon_db_cursor.fetchall()
 
         while True:
             try:
@@ -136,9 +154,6 @@ class amazonpy():
 
     def url_menu(self):
         # this is the part where you manage the links
-        changed = False
-        if len(self.product) == 0:
-            print("There's no url")
 
         while True:
             print("What would you like to do?\n1 --> add link        2 --> delete link\n3 --> modify link     4 --> show link\n5 --> fetch     0 --> exit url_menu")
@@ -147,76 +162,24 @@ class amazonpy():
             option = int(input("-->"))
             if option == 1:
                 self.add_product(input("Insert a link -->"))
-                changed = True
+
             elif option == 2:
                 self.show_products()
                 self.remove_product(
                     int(input("Select which number would you like to delete")) - 1)
-                changed = True
+
             elif option == 3:
                 # ToDo self.url_list[int(input("Select which number would you like to modify")) - 1] = input("Insert the link --> ")
-                changed = True
+                pass
             elif option == 4:
                 self.show_products()
+
             elif option == 5:
                 bot.fetch()
                 print("Fetch process done")
 
-            elif option == 0:
-                if not changed:
-                    return
-
-                while True:
-                    print("Would you like save you changes? [y/n]")
-                    save = input("-->")
-                    if save == 'y':
-                        json.dump(self.product, open(
-                            self.settings["productfile"], "w"))
-                        return
-                    elif save == 'n':
-                        return
-
-                    else:
-                        print("Error, invalid comand, please try again")
-
             else:
                 print("Error, invalid input")
-
-    def compare(self):
-        comp_file = open("products", "rb")
-        self.product = pickle.load(comp_file, encoding='bytes')
-
-        # converting the dictionary in a list (only the values)
-        price_list = list(self.product.values())
-        for x in range(len(self.url_list)):
-            try:
-                # takes the intire page data
-                page = requests.get(self.url_list[x], headers=self.header)
-
-                # bs4 will try to take all the html content
-                soup = BeautifulSoup(page.content, 'html.parser')
-
-                # by using bs4 we can ask it to find the title in the html file
-                title = soup.find(id='productTitle').get_text()
-
-                price = soup.find(id='priceblock_ourprice').get_text()
-                price = price.replace(',', '.')
-                price = "".join(i for i in price if i != '€')
-                converted_price = float(price)
-
-                print(
-                    f"Product's n{x} (Before): {price_list[x]} ||| Product's price (Now) {converted_price}")
-                if (price_list[x] > converted_price):
-                    print(
-                        f"!!!Found discount in product's [{title.strip()}] differenze: {price_list[x] - converted_price} euros!!!")
-                    open_choice = input(
-                        "Would you like to see the discounted product?  y | n \n--->")
-                    if (open_choice == 'y'):
-                        webbrowser.open(self.url_list[x])
-                    else:
-                        continue
-            except:
-                print(f"Error could not find the price in link n{x}")
 
     def add_product(self, url):
         try:
@@ -235,28 +198,69 @@ class amazonpy():
             logging.error("OOps: Something Else", err)
 
         else:
-            '''
-            if not page.status_code == 200:
-                print("connection error "+page.status_code+" try later")
-                return
-            '''
-
             soup = BeautifulSoup(page.content, 'html.parser')
 
-            new_product = {
-                "productname": soup.find(id='productTitle').get_text().replace("\n", ""),
-                "url": url,
-                "tag": soup.find(class_="a-link-normal a-color-tertiary").get_text().replace("  ", "").replace('\n', ''),
-                "detectionprice": []
-            }
-            self.product.append(new_product)
+            # inserisci prodotto
+            prodtable = Table('Prodotti')
 
-            json.dump(self.product, open(self.settings["productfile"], "w"))
+            query = MySQLQuery.into(prodtable).columns(prodtable.Nome, prodtable.Link, prodtable.Descrizione).insert(
+                soup.find(id='productTitle').get_text().replace("\n", "").replace("'", "\'"), url, "")
 
-    def new_detection(self, i):
+            self.amazon_db_cursor.execute(query.get_sql())
+
+            self.amazon_db.commit()
+
+            prodId = self.amazon_db_cursor.lastrowid
+
+            # inserisci categoria
+            for query in self.settings["catquery"]:
+                catname = soup.find(class_=query).get_text().replace("  ", "").replace('\n', '').replace("'", "\'")
+                if not (catname == None or catname == ""):
+                    break
+
+            if catname == None or catname == "":
+                return
+
+            categtable = Table('Categorie')
+
+            cetquery = MySQLQuery.from_(categtable).select(
+                "*").where(categtable.Nome == catname)
+
+            self.amazon_db_cursor.execute(cetquery.get_sql())
+
+            catresult = self.amazon_db_cursor.fetchall()
+
+            #add if not exist
+            if len(catresult) == 0:
+
+                query = MySQLQuery.into(categtable).columns(
+                    categtable.Nome).insert(catname)
+
+                self.amazon_db_cursor.execute(query.get_sql())
+
+                self.amazon_db.commit()
+
+                cateId = self.amazon_db_cursor.lastrowid
+            else:
+                cateId, nomecat = catresult[0]
+
+            # agginugi categoria a prodotto
+            categtable = Table('Appartenenza')
+
+            query = MySQLQuery.into(categtable).columns(
+                categtable.ID_Prodotto, categtable.ID_Categoria).insert(prodId, cateId)
+
+            self.amazon_db_cursor.execute(query.get_sql())
+
+            self.amazon_db.commit()
+
+    def new_detection(self, prod):
+
+        Id, Link = prod
+
         try:
             page = requests.get(
-                self.product[i]["url"], headers=self.settings["header"])
+                Link, headers=self.settings["header"])
 
         except requests.exceptions.HTTPError as errh:
             logging.error("Http Error:", errh)
@@ -271,12 +275,6 @@ class amazonpy():
             logging.error("OOps: Something Else", err)
 
         else:
-            '''
-                if not page.status_code == 200:
-                print("connection error "+page.status_code+" try later")
-                logging.error(page.status_code + " - "+ page.url)
-                return
-            '''
 
             price = self.find_price(page)
             if not price or price == "":
@@ -287,16 +285,18 @@ class amazonpy():
 
             # price convertion to string to float
             price = price.replace(',', '.')
-            # "".join(i for i in price if i != '€')  # price[price.index("€")+1:] by P.
             price = re.findall("[0-9]+.[0,9]+", price)[0]
             converted_price = float(price)
 
-            self.product[i]["detectionprice"].append({
-                "price": converted_price,
-                "date": datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
-            })
+            # add price to db
+            pricetable = Table('Prezzi')
 
-            json.dump(self.product, open(self.settings["productfile"], "w"))
+            query = MySQLQuery.into(pricetable).columns(pricetable.Date, pricetable.Prezzo, pricetable.ID_Prodotto).insert(
+                datetime.now().strftime("%Y-%m-%d %H:%M:%S"), converted_price, Id)
+
+            self.amazon_db_cursor.execute(query.get_sql())
+
+            self.amazon_db.commit()
 
     def remove_product(self, i):
         self.product.remove(self.product[i])
@@ -320,10 +320,22 @@ class amazonpy():
         return "0.0€"
 
     def start_continuous_fetch(self):
+        prodtable = Table('Prodotti')
+
+        query = MySQLQuery.from_(prodtable).select(
+            prodtable.ID, prodtable.LINK)
+
+        self.amazon_db_cursor.execute(query.get_sql())
+
+        self.product = self.amazon_db_cursor.fetchall()
+
         logging.info("numero prodotti: "+str(len(self.product)))
-        for i in range(len(self.product)):
-            self.new_detection(i)
-        t = threading.Timer(30, self.start_continuous_fetch)
+        for prod in self.product:
+            self.new_detection(prod)
+
+        self.product = None
+
+        t = threading.Timer(60, self.start_continuous_fetch)
         t.start()
 
     def drow_graph(self, i):
@@ -343,8 +355,10 @@ bot = amazonpy()
 
 
 def main():
-    # bot.url_menu()
-    bot.start_continuous_fetch()
+    t1 = threading.Timer(0, bot.start_continuous_fetch)
+    #t2 = threading.Timer(0, bot.url_menu)
+    #t2.start()
+    t1.start()
 
 
 if __name__ == "__main__":
