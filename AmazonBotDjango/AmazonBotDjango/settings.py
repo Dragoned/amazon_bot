@@ -28,10 +28,12 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1']
 
+AUTH_USER_MODEL = "Account.Account"
 
 # Application definition
 
 INSTALLED_APPS = [
+    'Account',
     'AmazonBotSites',
     'django.contrib.admin',
     'django.contrib.auth',

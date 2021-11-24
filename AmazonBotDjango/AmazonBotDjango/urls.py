@@ -15,8 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from Account import views as registerview
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('register/', registerview.register, name='register'),
     path('', include('AmazonBotSites.urls'))
 ]
