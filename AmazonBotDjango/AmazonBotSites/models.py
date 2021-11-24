@@ -11,3 +11,7 @@ class Price(models.Model):
     price = models.FloatField()
     datetime = models.DateTimeField()
     ID_Product = models.ForeignKey(Product, on_delete=models.CASCADE)
+
+class Category(models.Model):
+    name = models.CharField(max_length=255)
+    product = models.ManyToManyField(Product)
