@@ -5,5 +5,10 @@ Home
 {% endblock %}
 
 {% block content %}
-<h1>Home Page</h1>
+    <h1>Home Page</h1>
+    <ul>
+		{% for product in prodlist %}
+            <li><a href="/{{product.id}}">{{product.name}}</a></li>
+		{% endfor %}
+	</ul>
 {% endblock %}

@@ -33,3 +33,64 @@
 11/16/2021 11:04:40 AM DEBUG - _make_request:https://www.amazon.it:443 "GET /Funko-Pop-Avengers-Endgame-Multicolor/dp/B083YS9R43/ref=sr_1_7?__mk_it_IT=%C3%85M%C3%85%C5%BD%C3%95%C3%91&keywords=funko+pop&qid=1637049939&qsid=260-7952185-2012747&sr=8-7&sres=B07KPSDWJJ%2CB083MCJD4M%2CB083YS9R43%2CB08BKXFRKT%2CB01MFX366P%2CB07ZZP1Q57%2CB07Y1ZKFLF%2CB07SQWRYJH%2CB083MDC5D1%2CB08MPZVXKV%2CB07QGWQF45%2CB087NC336Q%2CB08WCV9Z3X%2CB083MDVBDQ%2CB07TYQCV2L%2CB082LWLTPS%2CB087N3XFJY%2CB08HN9RX77%2CB07QFRZ5VZ%2CB08WCWLHFG&srpt=FIGURINE HTTP/1.1" 200 None
 11/16/2021 11:04:41 AM DEBUG - _new_conn:Starting new HTTPS connection (1): www.amazon.it:443
 11/16/2021 11:04:42 AM DEBUG - _make_request:https://www.amazon.it:443 "GET /Intel-NUC-Mainstream-Kit-NUC8i3BEH/dp/B08N6BN8JH/ref=sr_1_3_sspa?__mk_it_IT=%C3%85M%C3%85%C5%BD%C3%95%C3%91&keywords=intel+nuc&qid=1637056263&sr=8-3-spons&psc=1&spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUExQ1cwTU5UQzdVV1o3JmVuY3J5cHRlZElkPUEwNjg2ODcwMzBVNThRUVBMWEhQMyZlbmNyeXB0ZWRBZElkPUEwMzM1NDYwMkE0R0tBVEtYVzJRTyZ3aWRnZXROYW1lPXNwX2F0ZiZhY3Rpb249Y2xpY2tSZWRpcmVjdCZkb05vdExvZ0NsaWNrPXRydWU= HTTP/1.1" 200 None
+11/25/2021 12:15:43 PM DEBUG - _do_auth:# _do_auth(): user: AmazonBot
+11/25/2021 12:15:43 PM DEBUG - _do_auth:# _do_auth(): self._auth_plugin: 
+11/25/2021 12:15:43 PM DEBUG - _auth_switch_request:new_auth_plugin: caching_sha2_password
+11/25/2021 12:17:26 PM DEBUG - _do_auth:# _do_auth(): user: AmazonBot
+11/25/2021 12:17:26 PM DEBUG - _do_auth:# _do_auth(): self._auth_plugin: 
+11/25/2021 12:17:26 PM DEBUG - _auth_switch_request:new_auth_plugin: caching_sha2_password
+11/25/2021 12:17:28 PM DEBUG - _new_conn:Starting new HTTPS connection (1): www.google.com:443
+11/25/2021 12:17:29 PM DEBUG - _make_request:https://www.google.com:443 "GET / HTTP/1.1" 200 None
+11/25/2021 12:18:06 PM DEBUG - _new_conn:Starting new HTTPS connection (1): www.amazon.it:443
+11/25/2021 12:18:06 PM DEBUG - _make_request:https://www.amazon.it:443 "GET /Poliedrici-Dungeons-Riunioni-Famiglie-Sacchetti/dp/B092V9LYM5/ref=sr_1_2_sspa?__mk_it_IT=%C3%85M%C3%85%C5%BD%C3%95%C3%91&dchild=1&keywords=dadi&qid=1632125372&sr=8-2-spons&psc=1&spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFVMEg2NVJMSFRVNFQmZW5jcnlwdGVkSWQ9QTA4NjUzMTNXVkEyQ1RKQkY5NTUmZW5jcnlwdGVkQWRJZD1BMDk3Mzg0MkdCMlJHQTFJUVg0SyZ3aWRnZXROYW1lPXNwX2F0ZiZhY3Rpb249Y2xpY2tSZWRpcmVjdCZkb05vdExvZ0NsaWNrPXRydWU= HTTP/1.1" 200 None
+11/25/2021 12:20:52 PM DEBUG - _do_auth:# _do_auth(): user: AmazonBot
+11/25/2021 12:20:52 PM DEBUG - _do_auth:# _do_auth(): self._auth_plugin: 
+11/25/2021 12:20:52 PM DEBUG - _auth_switch_request:new_auth_plugin: caching_sha2_password
+11/25/2021 12:20:54 PM DEBUG - _new_conn:Starting new HTTPS connection (1): www.google.com:443
+11/25/2021 12:20:55 PM DEBUG - _make_request:https://www.google.com:443 "GET / HTTP/1.1" 200 None
+11/25/2021 12:21:19 PM DEBUG - _new_conn:Starting new HTTPS connection (1): www.amazon.it:443
+11/25/2021 12:21:20 PM DEBUG - _make_request:https://www.amazon.it:443 "GET /fire-tv-stick-con-telecomando-vocale-alexa/dp/B08C1KN5J2?ref=dlx_black_gd_dcl_img_2_65d9ccfd_dt_sl6_33 HTTP/1.1" 200 None
+11/25/2021 12:22:46 PM DEBUG - _do_auth:# _do_auth(): user: AmazonBot
+11/25/2021 12:22:46 PM DEBUG - _do_auth:# _do_auth(): self._auth_plugin: 
+11/25/2021 12:22:46 PM DEBUG - _auth_switch_request:new_auth_plugin: caching_sha2_password
+11/25/2021 12:22:48 PM DEBUG - _new_conn:Starting new HTTPS connection (1): www.google.com:443
+11/25/2021 12:22:49 PM DEBUG - _make_request:https://www.google.com:443 "GET / HTTP/1.1" 200 None
+11/25/2021 12:23:06 PM DEBUG - _new_conn:Starting new HTTPS connection (1): www.amazon.it:443
+11/25/2021 12:23:07 PM DEBUG - _make_request:https://www.amazon.it:443 "GET /fire-tv-stick-con-telecomando-vocale-alexa/dp/B08C1KN5J2?ref=dlx_black_gd_dcl_img_2_65d9ccfd_dt_sl6_33 HTTP/1.1" 200 None
+11/25/2021 12:28:56 PM DEBUG - _new_conn:Starting new HTTPS connection (1): www.google.com:443
+11/25/2021 12:28:57 PM DEBUG - _make_request:https://www.google.com:443 "GET / HTTP/1.1" 200 None
+11/25/2021 12:29:03 PM DEBUG - _new_conn:Starting new HTTPS connection (1): www.amazon.it:443
+11/25/2021 12:29:04 PM DEBUG - _make_request:https://www.amazon.it:443 "GET /fire-tv-stick-con-telecomando-vocale-alexa/dp/B08C1KN5J2?ref=dlx_black_gd_dcl_img_2_65d9ccfd_dt_sl6_33 HTTP/1.1" 200 None
+11/25/2021 12:31:47 PM DEBUG - _new_conn:Starting new HTTPS connection (1): www.google.com:443
+11/25/2021 12:31:48 PM DEBUG - _make_request:https://www.google.com:443 "GET / HTTP/1.1" 200 None
+11/25/2021 12:31:51 PM DEBUG - _new_conn:Starting new HTTPS connection (1): www.amazon.it:443
+11/25/2021 12:31:51 PM DEBUG - _make_request:https://www.amazon.it:443 "GET /Poliedrici-Dungeons-Riunioni-Famiglie-Sacchetti/dp/B092V9LYM5/ref=sr_1_2_sspa?__mk_it_IT=%C3%85M%C3%85%C5%BD%C3%95%C3%91&dchild=1&keywords=dadi&qid=1632125372&sr=8-2-spons&psc=1&spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFVMEg2NVJMSFRVNFQmZW5jcnlwdGVkSWQ9QTA4NjUzMTNXVkEyQ1RKQkY5NTUmZW5jcnlwdGVkQWRJZD1BMDk3Mzg0MkdCMlJHQTFJUVg0SyZ3aWRnZXROYW1lPXNwX2F0ZiZhY3Rpb249Y2xpY2tSZWRpcmVjdCZkb05vdExvZ0NsaWNrPXRydWU= HTTP/1.1" 200 None
+11/25/2021 12:34:03 PM DEBUG - _new_conn:Starting new HTTPS connection (1): www.google.com:443
+11/25/2021 12:34:04 PM DEBUG - _make_request:https://www.google.com:443 "GET / HTTP/1.1" 200 None
+11/25/2021 12:34:07 PM DEBUG - _new_conn:Starting new HTTPS connection (1): www.amazon.it:443
+11/25/2021 12:34:08 PM DEBUG - _make_request:https://www.amazon.it:443 "GET /Poliedrici-Dungeons-Riunioni-Famiglie-Sacchetti/dp/B092V9LYM5/ref=sr_1_2_sspa?__mk_it_IT=%C3%85M%C3%85%C5%BD%C3%95%C3%91&dchild=1&keywords=dadi&qid=1632125372&sr=8-2-spons&psc=1&spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFVMEg2NVJMSFRVNFQmZW5jcnlwdGVkSWQ9QTA4NjUzMTNXVkEyQ1RKQkY5NTUmZW5jcnlwdGVkQWRJZD1BMDk3Mzg0MkdCMlJHQTFJUVg0SyZ3aWRnZXROYW1lPXNwX2F0ZiZhY3Rpb249Y2xpY2tSZWRpcmVjdCZkb05vdExvZ0NsaWNrPXRydWU= HTTP/1.1" 200 None
+11/25/2021 03:15:07 PM DEBUG - _do_auth:# _do_auth(): user: AmazonBot
+11/25/2021 03:15:07 PM DEBUG - _do_auth:# _do_auth(): self._auth_plugin: 
+11/25/2021 03:15:07 PM DEBUG - _auth_switch_request:new_auth_plugin: caching_sha2_password
+11/25/2021 03:15:10 PM DEBUG - _new_conn:Starting new HTTPS connection (1): www.google.com:443
+11/25/2021 03:15:11 PM DEBUG - _make_request:https://www.google.com:443 "GET / HTTP/1.1" 200 None
+11/25/2021 03:15:11 PM INFO - start_continuous_fetch:numero prodotti: 2
+11/25/2021 03:15:11 PM DEBUG - _new_conn:Starting new HTTPS connection (1): www.amazon.it:443
+11/25/2021 03:15:17 PM DEBUG - _make_request:https://www.amazon.it:443 "GET /fire-tv-stick-con-telecomando-vocale-alexa/dp/B08C1KN5J2?ref=dlx_black_gd_dcl_img_2_65d9ccfd_dt_sl6_33 HTTP/1.1" 200 None
+11/25/2021 03:15:19 PM DEBUG - _new_conn:Starting new HTTPS connection (1): www.amazon.it:443
+11/25/2021 03:15:19 PM DEBUG - _make_request:https://www.amazon.it:443 "GET /Poliedrici-Dungeons-Riunioni-Famiglie-Sacchetti/dp/B092V9LYM5/ref=sr_1_2_sspa?__mk_it_IT=%C3%85M%C3%85%C5%BD%C3%95%C3%91&dchild=1&keywords=dadi&qid=1632125372&sr=8-2-spons&psc=1&spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFVMEg2NVJMSFRVNFQmZW5jcnlwdGVkSWQ9QTA4NjUzMTNXVkEyQ1RKQkY5NTUmZW5jcnlwdGVkQWRJZD1BMDk3Mzg0MkdCMlJHQTFJUVg0SyZ3aWRnZXROYW1lPXNwX2F0ZiZhY3Rpb249Y2xpY2tSZWRpcmVjdCZkb05vdExvZ0NsaWNrPXRydWU= HTTP/1.1" 200 None
+11/25/2021 03:17:53 PM DEBUG - _do_auth:# _do_auth(): user: AmazonBot
+11/25/2021 03:17:53 PM DEBUG - _do_auth:# _do_auth(): self._auth_plugin: 
+11/25/2021 03:17:53 PM DEBUG - _auth_switch_request:new_auth_plugin: caching_sha2_password
+11/25/2021 03:17:55 PM DEBUG - _new_conn:Starting new HTTPS connection (1): www.google.com:443
+11/25/2021 03:17:55 PM DEBUG - _make_request:https://www.google.com:443 "GET / HTTP/1.1" 200 None
+11/25/2021 03:17:56 PM INFO - start_continuous_fetch:numero prodotti: 2
+11/25/2021 03:17:56 PM DEBUG - _new_conn:Starting new HTTPS connection (1): www.amazon.it:443
+11/25/2021 03:17:57 PM DEBUG - _make_request:https://www.amazon.it:443 "GET /fire-tv-stick-con-telecomando-vocale-alexa/dp/B08C1KN5J2?ref=dlx_black_gd_dcl_img_2_65d9ccfd_dt_sl6_33 HTTP/1.1" 200 None
+11/25/2021 03:17:59 PM DEBUG - _new_conn:Starting new HTTPS connection (1): www.amazon.it:443
+11/25/2021 03:17:59 PM DEBUG - _make_request:https://www.amazon.it:443 "GET /Poliedrici-Dungeons-Riunioni-Famiglie-Sacchetti/dp/B092V9LYM5/ref=sr_1_2_sspa?__mk_it_IT=%C3%85M%C3%85%C5%BD%C3%95%C3%91&dchild=1&keywords=dadi&qid=1632125372&sr=8-2-spons&psc=1&spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFVMEg2NVJMSFRVNFQmZW5jcnlwdGVkSWQ9QTA4NjUzMTNXVkEyQ1RKQkY5NTUmZW5jcnlwdGVkQWRJZD1BMDk3Mzg0MkdCMlJHQTFJUVg0SyZ3aWRnZXROYW1lPXNwX2F0ZiZhY3Rpb249Y2xpY2tSZWRpcmVjdCZkb05vdExvZ0NsaWNrPXRydWU= HTTP/1.1" 200 None
+11/25/2021 03:23:01 PM INFO - start_continuous_fetch:numero prodotti: 2
+11/25/2021 03:23:01 PM DEBUG - _new_conn:Starting new HTTPS connection (1): www.amazon.it:443
+11/25/2021 03:23:01 PM DEBUG - _make_request:https://www.amazon.it:443 "GET /fire-tv-stick-con-telecomando-vocale-alexa/dp/B08C1KN5J2?ref=dlx_black_gd_dcl_img_2_65d9ccfd_dt_sl6_33 HTTP/1.1" 200 None
+11/25/2021 03:23:04 PM DEBUG - _new_conn:Starting new HTTPS connection (1): www.amazon.it:443
+11/25/2021 03:23:04 PM DEBUG - _make_request:https://www.amazon.it:443 "GET /Poliedrici-Dungeons-Riunioni-Famiglie-Sacchetti/dp/B092V9LYM5/ref=sr_1_2_sspa?__mk_it_IT=%C3%85M%C3%85%C5%BD%C3%95%C3%91&dchild=1&keywords=dadi&qid=1632125372&sr=8-2-spons&psc=1&spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFVMEg2NVJMSFRVNFQmZW5jcnlwdGVkSWQ9QTA4NjUzMTNXVkEyQ1RKQkY5NTUmZW5jcnlwdGVkQWRJZD1BMDk3Mzg0MkdCMlJHQTFJUVg0SyZ3aWRnZXROYW1lPXNwX2F0ZiZhY3Rpb249Y2xpY2tSZWRpcmVjdCZkb05vdExvZ0NsaWNrPXRydWU= HTTP/1.1" 200 None

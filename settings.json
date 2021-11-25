@@ -11,7 +11,7 @@
     "DBIP":"85.43.41.198",
     "DBUser":"AmazonBot",
     "DBPass":"AmazonBot@2021",
-    "DB":"AmazonBot",
+    "DB":"AmazonBot_Django",
     "serchQuery": [
         "a-offscreen",
         "a-size-medium a-color-price",
@@ -20,6 +20,7 @@
     ],
     "catquery":[
         "nav-a-content",
-        "a-link-normal a-color-tertiary"
+        "a-link-normal a-color-tertiary",
+        "nav-a-content"
     ]
 }

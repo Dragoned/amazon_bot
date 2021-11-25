@@ -10,4 +10,5 @@ def index(response, id):
 	return render(response, "AmazonBotSites/list.html", {"prod":prod})
 
 def home(response):
-	return render(response, "AmazonBotSites/home.html", {})
+	prodlist = Product.objects.all()
+	return render(response, "AmazonBotSites/home.html", {"prodlist":prodlist})

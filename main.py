@@ -110,7 +110,7 @@ class amazonpy():
 
             break
 
-        prodtable = Table('Prodotti')
+        prodtable = Table('AmazonBotSites_product')
 
         query = MySQLQuery.from_(prodtable).select(
             prodtable.ID, prodtable.LINK)
@@ -201,10 +201,10 @@ class amazonpy():
             soup = BeautifulSoup(page.content, 'html.parser')
 
             # inserisci prodotto
-            prodtable = Table('Prodotti')
+            prodtable = Table('AmazonBotSites_product')
 
-            query = MySQLQuery.into(prodtable).columns(prodtable.Nome, prodtable.Link, prodtable.Descrizione).insert(
-                soup.find(id='productTitle').get_text().replace("\n", "").replace("'", "\'"), url, "")
+            query = MySQLQuery.into(prodtable).columns(prodtable.Name, prodtable.Link).insert(
+                soup.find(id='productTitle').get_text().replace("\n", "").replace("'", "\'"), url)
 
             self.amazon_db_cursor.execute(query.get_sql())
 
@@ -214,27 +214,29 @@ class amazonpy():
 
             # inserisci categoria
             for query in self.settings["catquery"]:
-                catname = soup.find(class_=query).get_text().replace("  ", "").replace('\n', '').replace("'", "\'")
-                if not (catname == None or catname == ""):
+                catname = soup.find(class_=query)
+                if not catname == None:
+                    catname = catname.get_text().replace(
+                        "  ", "").replace('\n', '').replace("'", "\'")
                     break
 
             if catname == None or catname == "":
                 return
 
-            categtable = Table('Categorie')
+            categtable = Table('AmazonBotSites_category')
 
             cetquery = MySQLQuery.from_(categtable).select(
-                "*").where(categtable.Nome == catname)
+                "*").where(categtable.Name == catname)
 
             self.amazon_db_cursor.execute(cetquery.get_sql())
 
             catresult = self.amazon_db_cursor.fetchall()
 
-            #add if not exist
+            # add if not exist
             if len(catresult) == 0:
 
                 query = MySQLQuery.into(categtable).columns(
-                    categtable.Nome).insert(catname)
+                    categtable.Name).insert(catname)
 
                 self.amazon_db_cursor.execute(query.get_sql())
 
@@ -245,10 +247,10 @@ class amazonpy():
                 cateId, nomecat = catresult[0]
 
             # agginugi categoria a prodotto
-            categtable = Table('Appartenenza')
+            categtable = Table('AmazonBotSites_category_product')
 
             query = MySQLQuery.into(categtable).columns(
-                categtable.ID_Prodotto, categtable.ID_Categoria).insert(prodId, cateId)
+                categtable.product_id, categtable.category_id).insert(prodId, cateId)
 
             self.amazon_db_cursor.execute(query.get_sql())
 
@@ -289,9 +291,9 @@ class amazonpy():
             converted_price = float(price)
 
             # add price to db
-            pricetable = Table('Prezzi')
+            pricetable = Table('AmazonBotSites_price')
 
-            query = MySQLQuery.into(pricetable).columns(pricetable.Date, pricetable.Prezzo, pricetable.ID_Prodotto).insert(
+            query = MySQLQuery.into(pricetable).columns(pricetable.Datetime, pricetable.Price, pricetable.ID_product_id).insert(
                 datetime.now().strftime("%Y-%m-%d %H:%M:%S"), converted_price, Id)
 
             self.amazon_db_cursor.execute(query.get_sql())
@@ -320,7 +322,7 @@ class amazonpy():
         return "0.0€"
 
     def start_continuous_fetch(self):
-        prodtable = Table('Prodotti')
+        prodtable = Table('AmazonBotSites_product')
 
         query = MySQLQuery.from_(prodtable).select(
             prodtable.ID, prodtable.LINK)
@@ -335,7 +337,7 @@ class amazonpy():
 
         self.product = None
 
-        t = threading.Timer(60, self.start_continuous_fetch)
+        t = threading.Timer(60*5, self.start_continuous_fetch)
         t.start()
 
     def drow_graph(self, i):
