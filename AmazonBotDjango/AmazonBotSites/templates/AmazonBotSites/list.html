@@ -2,13 +2,18 @@
 {% block title %}View List{% endblock %}
 
 {% block content %}
-	<h1>{{prod.name}}</h1>
-	{% for category in prod.category_set.all %}
-		<h3>{{category.name}}</h3>
-	{%endfor%}
-	<ul>
-		{% for price in prod.price_set.all %}
-            <li>{{price.price}} - {{price.datetime}}</li>
-		{% endfor %}
-	</ul>
+
+	{% for prod in products %}
+		<h1>{{prod.name}}</h1>
+		{% for category in prod.category_set.all %}
+			<h3>{{category.name}}</h3>
+		{%endfor%}
+		<ul>
+			{% for price in prod.price_set.all %}
+				<li>{{price.price}} - {{price.datetime}}</li>
+			{% endfor %}
+		</ul>
+	{% empty %}
+		<li>Non vi sono prodotti</li>
+	{% endfor %}
 {% endblock %}
