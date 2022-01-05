@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'Account',
     'AmazonBotSites',
     "crispy_forms",
+    'django.contrib.humanize',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

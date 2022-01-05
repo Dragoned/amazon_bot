@@ -5,10 +5,21 @@ from .models import *
 
 # Create your views here.
 
-def list(response):
-	prod = Product.objects.all()
-	return render(response, "AmazonBotSites/list.html", {"products":prod})
-
-def home(response):
+def home(request):
 	prodlist = Product.objects.all()
-	return render(response, "AmazonBotSites/home.html", {"prodlist":prodlist})
+	return render(request, "AmazonBotSites/home.html", {"prodlist":prodlist})
+
+def list(request):
+
+	if request.method == 'POST':
+		serch = request.POST['searchinput']
+		prod = Product.objects.filter(name__icontains=serch)
+	else:
+		prod = Product.objects.all()
+  
+	return render(request, "AmazonBotSites/list.html", {"prodlist":prod})
+
+def pdoductdetails(request, id):
+    product = Product.objects.get(id=id)
+    print(product)
+    return render(request, "AmazonBotSites/proddetails.html", {"product":product})

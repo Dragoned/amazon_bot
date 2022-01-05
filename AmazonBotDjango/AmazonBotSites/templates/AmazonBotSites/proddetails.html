@@ -1,0 +1,36 @@
+{% extends 'AmazonBotSites/base.html' %}
+
+{% block title %}
+Product Detail Page
+{% endblock %}
+
+{% block pagetitle %}
+  
+{% endblock %}
+
+{% block content %}
+{% load humanize %}
+      <div class="card">
+            <div class="card-body">
+                  <h2 class="card-title">{{product.name}}</h2>
+                  <p class="card-text">
+                        <div class="container">
+                              <div class="row">
+                                    <div class="col">
+                                          Price: {{product.price_set.last.price|floatformat:2|intcomma}} €
+                                    </div>
+                                    <div class="col">
+                                          category: {{product.category_set.last.name}}
+                                    </div>
+                              </div>
+                              <div class="col">
+                                    next
+                              </div>
+                        </div>
+                  </p>
+            </div>
+            <div class="card-footer text-muted">
+                  Last update {{product.price_set.last.datetime}}
+            </div>
+      </div>
+{% endblock %}
