@@ -1,6 +1,8 @@
 # views.py
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+
+
 from .models import *
 
 # Create your views here.
@@ -23,3 +25,15 @@ def pdoductdetails(request, id):
     product = Product.objects.get(id=id)
     print(product)
     return render(request, "AmazonBotSites/proddetails.html", {"product":product})
+
+def prodpricedata(request, id, *keyword, **kwargs):
+    
+	prices = Price.objects.filter(ID_Product__exact=id)
+
+	print(prices)
+
+	data = {
+		"prices": [i.price for i in prices],
+  		"date": [i.datetime for i in prices]
+	}
+	return JsonResponse(data)
