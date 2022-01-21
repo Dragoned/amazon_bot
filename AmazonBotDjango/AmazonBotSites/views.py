@@ -4,12 +4,32 @@ from django.http import HttpResponse, JsonResponse
 
 
 from .models import *
+from .forms import *
 
 # Create your views here.
 
 def home(request):
 	prodlist = Product.objects.all()
 	return render(request, "AmazonBotSites/home.html", {"prodlist":prodlist})
+
+def createprodlist(request):
+	if request.method == "POST":
+
+		form = ProductListForm(request.POST)
+
+		if form.is_valid():
+			ProductList = form.save(commit=False)
+
+			ProductList.ID_User = request.user
+
+			ProductList.save()
+
+	form = ProductListForm()
+	return render(request, "AmazonBotSites/createprodlist.html", {"form":form})
+
+def grouplis(request):
+	grouplist = ProductList.objects.filter(ID_User=request.user)
+	return render(request, "AmazonBotSites/prodlistview.html", {"grouplist":grouplist})
 
 def list(request):
 
