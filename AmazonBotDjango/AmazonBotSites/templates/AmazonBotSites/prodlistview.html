@@ -1,0 +1,27 @@
+{% extends "AmazonBotSites/base.html" %}
+{% block title %}View List{% endblock %}
+
+{% block pagetitle %}
+	Lista Prodotti	
+{% endblock %}
+
+{% block content %}
+{% load humanize %}
+
+	<ul>
+		{% for grups in grouplist %}
+		<div class="card">
+			<div class="card-body">
+				<h5 class="card-title">{{grups.name}}</h5>
+				<p class="card-text">
+					{{grups.target_price|floatformat:2|intcomma}} €
+				</p>
+				<a href="/{{grups.id}}" class="btn btn-primary">Go to list dettails</a>
+			</div>
+		</div>
+		<br/>
+		{% empty %}
+			<li>Non vi sono liste</li>
+		{% endfor %}
+	</ul>
+{% endblock %}
