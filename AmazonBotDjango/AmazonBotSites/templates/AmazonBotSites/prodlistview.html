@@ -3,6 +3,9 @@
 
 {% block pagetitle %}
 	Lista Prodotti	
+	<a href="{% url 'createprodlist' %}">
+		<button class="btn btn-primary">Crea nuova lista</button>
+  	</a>
 {% endblock %}
 
 {% block content %}
@@ -14,7 +17,14 @@
 			<div class="card-body">
 				<h5 class="card-title">{{grups.name}}</h5>
 				<p class="card-text">
-					{{grups.target_price|floatformat:2|intcomma}} €
+					<div class="row">
+						<div class="col">
+							Prezzo Target: {{grups.target_price|floatformat:2|intcomma}} €
+						</div>
+						<div class="col">
+							creato da utente: {{grups.ID_User}}
+						</div>
+					</div>
 				</p>
 				<a href="/{{grups.id}}" class="btn btn-primary">Go to list dettails</a>
 			</div>

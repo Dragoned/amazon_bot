@@ -1,5 +1,5 @@
 # views.py
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 
 
@@ -23,6 +23,8 @@ def createprodlist(request):
 			ProductList.ID_User = request.user
 
 			ProductList.save()
+   
+			return redirect("grouplis")
 
 	form = ProductListForm()
 	return render(request, "AmazonBotSites/createprodlist.html", {"form":form})
