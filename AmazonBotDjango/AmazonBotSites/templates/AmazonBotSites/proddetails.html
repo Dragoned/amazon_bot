@@ -28,6 +28,10 @@ Product Detail Page
                               </div>
                         </div>
                   </p>
+                  
+                  <form method="post" class="form-group">{% csrf_token %}
+                        <button type="submit" class="btn btn-success"> Traccia prodotto </button>
+                  </form>
             </div>
             <div class="card-footer text-muted">
                   Last update {{product.price_set.last.datetime}}

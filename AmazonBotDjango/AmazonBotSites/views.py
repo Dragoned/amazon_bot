@@ -8,7 +8,11 @@ from .forms import *
 
 # Create your views here.
 
-def home(request):
+def home(request): 
+	if response.method == "POST":
+		#print(request.POST.get("2"))
+		pass
+
 	prodlist = Product.objects.all()
 	return render(request, "AmazonBotSites/home.html", {"prodlist":prodlist})
 
@@ -47,6 +51,7 @@ def pdoductdetails(request, id):
     product = Product.objects.get(id=id)
     print(product)
     return render(request, "AmazonBotSites/proddetails.html", {"product":product})
+
 
 def prodpricedata(request, id, *keyword, **kwargs):
     

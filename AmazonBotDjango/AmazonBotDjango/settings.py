@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'AmazonBotDjango.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
+'''
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -87,19 +87,18 @@ DATABASES = {
         },
     }
 }
-
 '''
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': '',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
+        'NAME': 'AmazonBot_Django',
+        'USER': 'AmazonBot',
+        'PASSWORD': 'AmazonBot@2021',
+        'HOST': '85.43.41.198',
+        'PORT': '3306',
     }
 }
-'''
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
