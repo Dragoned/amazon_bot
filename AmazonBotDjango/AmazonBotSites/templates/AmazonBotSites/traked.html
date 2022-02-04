@@ -1,0 +1,55 @@
+{% extends "AmazonBotSites/base.html" %}
+{% block title %}View List{% endblock %}
+
+{% block pagetitle %}
+	Prodotti tracciati
+{% endblock %}
+
+{% block content %}
+{% load humanize %}
+
+	<ul>
+		{% for trackprod in traked %}
+		<div class="card">
+			<div class="card-body">
+				<h3 class="card-title">{{trackprod.ID_Product.name}}</h3>
+				<p class="card-text">
+                    <div class="row">
+                        <div class="col-sm">
+                            <div class="d-flex justify-content-center">
+                                <h5> current price:  {{trackprod.ID_Product.price_set.last.price|floatformat:2|intcomma}} € </h5>
+                            </div>
+                        </div>
+                        
+                        <div class="col-sm">
+                            <div class="d-flex justify-content-center">
+                                <h5> target price: {{ trackprod.target_price |floatformat:2|intcomma}} € </h5>
+                            </div>
+                        </div>
+                    </div>
+				</p>
+
+				<div class="row">
+					<div class="col-sm">
+                        <div class="d-flex justify-content-center">
+                            <a href="/{{trackprod.ID_Product.id}}" class="btn btn-primary">Go to product dettails</a>
+                        </div>
+					</div>
+					
+					<div class="col-sm">
+						<div class="d-flex justify-content-center">
+							
+						</div>
+					</div>
+			  	</div>
+			</div>
+            <div class="card-footer text-muted">
+                Last update {{trackprod.ID_Product.price_set.last.datetime}}
+            </div>
+		</div>
+		<br/>
+		{% empty %}
+			<li>Non vi sono prodotti</li>
+		{% endfor %}
+	</ul>
+{% endblock %}

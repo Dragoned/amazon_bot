@@ -9,9 +9,10 @@ from .forms import *
 # Create your views here.
 
 def home(request): 
-	if response.method == "POST":
-		#print(request.POST.get("2"))
-		pass
+	if request.method == "POST":
+		itemid = request.POST.get("item")
+		item = Product.objects.get(id=itemid)
+		Traking.objects.create(ID_Product = item, ID_User = request.user, target_price=152.0)
 
 	prodlist = Product.objects.all()
 	return render(request, "AmazonBotSites/home.html", {"prodlist":prodlist})
@@ -39,19 +40,33 @@ def grouplis(request):
 
 def list(request):
 
-	if request.method == 'POST':
+	if request.method == "POST" and 'search' in request.POST:
 		serch = request.POST['searchinput']
-		prod = Product.objects.filter(name__icontains=serch)
-	else:
-		prod = Product.objects.all()
+		product = Product.objects.filter(name__icontains=serch)
   
-	return render(request, "AmazonBotSites/list.html", {"prodlist":prod})
+	elif 'item' in request.POST and 'item' in request.POST:
+		itemid = request.POST.get("item")
+		item = Product.objects.get(id=itemid)
+		Traking.objects.create(ID_Product = item, ID_User = request.user, target_price=152.0)
+
+		product = Product.objects.all()
+  
+	else:
+		product = Product.objects.all()
+  
+	return render(request, "AmazonBotSites/list.html", {"prodlist":product})
 
 def pdoductdetails(request, id):
     product = Product.objects.get(id=id)
     print(product)
     return render(request, "AmazonBotSites/proddetails.html", {"product":product})
 
+def trackproduct(request):
+    traked = Traking.objects.filter(ID_User__exact = request.user)
+    print(traked)
+    return render(request, "AmazonBotSites/traked.html", {"traked":traked})
+
+    
 
 def prodpricedata(request, id, *keyword, **kwargs):
     

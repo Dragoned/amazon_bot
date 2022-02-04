@@ -26,7 +26,22 @@
 						</div>
 					</div>
 				</p>
-				<a href="/{{grups.id}}" class="btn btn-primary">Go to list dettails</a>
+
+				<div class="row">
+					<div class="col-sm">
+						  <div class="d-flex justify-content-center">
+								<a href="/{{product.id}}" class="btn btn-primary">Go to product dettails</a>
+						  </div>
+					</div>
+					
+					<div class="col-sm">
+						  <div class="d-flex justify-content-center">
+								<form method="post" class="form-group">{% csrf_token %}
+									  <button type="submit", name="item", value="{{product.id}}", class="btn btn-success"> Traccia prodotto </button>
+								</form>
+						  </div>
+					</div>
+			  	</div>
 			</div>
 		</div>
 		<br/>
