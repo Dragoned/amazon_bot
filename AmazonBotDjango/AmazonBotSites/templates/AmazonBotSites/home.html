@@ -8,35 +8,58 @@ Home
 
 {% block content %}
 {% load humanize %}
-      <div data-spy="scroll" data-target="#navbar-example2" data-offset="0">
-            <ul>
-                  {% for product in prodlist %}
-                  <div class="card">
-                        <div class="card-body">
-                              <h5 class="card-title">{{product.name}}</h5>
-                              <p class="card-text">{{product.price_set.last.price|floatformat:2|intcomma}} €</p>
-                              
-                              <div class="row">
-                                    <div class="col-sm">
-                                            <div class="d-flex justify-content-center">
-                                                      <a href="/{{product.id}}" class="btn btn-primary">Go to product dettails</a>
-                                            </div>
-                                    </div>
-                                    
-                                    <div class="col-sm">
-                                          <div class="d-flex justify-content-center">
-                                                {% if user.is_authenticated %}
-                                                <form method="post" class="form-group">{% csrf_token %}
-                                                      <button type="submit", name="item", value="{{product.id}}", class="btn btn-success"> Traccia prodotto </button>
-                                                </form>
-                                                {% endif %}
-                                          </div>
-                                    </div>
-                              </div>
-                        </div>
-                  </div>
-                  <br/>
-                  {% endfor %}
-            </ul>
-      </div>
+
+	<ul>
+		{% for product in prodlist %}
+		<div class="card">
+			<div class="card-body">
+				<h5 class="card-title">{{product.name}}</h5>
+				<p class="card-text">
+					{% for category in product.category_set.all %}
+						<h3>{{category.name}}</h3>
+					{% endfor %}
+					{{product.price_set.last.price|floatformat:2|intcomma}} € - {{product.price_set.last.datetime}}
+				</p>
+
+				<div class="row">
+					<div class="col-sm">
+						  <div class="d-flex justify-content-center">
+								<a href="/{{product.id}}" class="btn btn-primary">Go to product dettails</a>
+						  </div>
+					</div>
+					
+					<div class="col-sm">
+						<div class="d-flex justify-content-center">
+							{% if user.is_authenticated %}
+							<button type="submit" data-toggle="modal" data-target="#modal-{{product.id}}" class="btn btn-success"> Traccia prodotto </button>
+							{% endif %}
+						</div>
+					</div>
+			  	</div>
+			</div>
+		</div>
+
+		<div class="modal" tabindex="-1" role="dialog" id="modal-{{product.id}}">
+			<div class="modal-dialog modal-dialog-centered">
+			  <div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">{{product.name}}</h5>
+					</div>
+					<div class="modal-body">
+						<form method="post" class="form-group">{% csrf_token %}
+							<label class="form-label">Prezo Desiderato</label>
+  							<input type="price" class="form-control"  name="pricetarget" placeholder="5.30">
+							<br>
+							<button type="submit", name="item", value="{{product.id}}", class="btn btn-success"> Traccia prodotto </button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>		  
+
+		<br/>
+		{% empty %}
+			<li>Non vi sono prodotti</li>
+		{% endfor %}
+	</ul>
 {% endblock %}
