@@ -11,10 +11,15 @@ from .forms import *
 def home(request): 
 	if request.method == "POST":
 		itemid = request.POST.get("item")
+		target_price = request.POST.get("pricetarget")
 		item = Product.objects.get(id=itemid)
-		Traking.objects.create(ID_Product = item, ID_User = request.user, target_price=152.0)
 
-	prodlist = Product.objects.all()
+		if not Traking.objects.filter(ID_Product__exact = item, ID_User__exact = request.user):
+			Traking.objects.create(ID_Product = item, ID_User = request.user, target_price=target_price)
+		else:
+			return redirect("tracked")
+
+	prodlist = Product.objects.all()[:3]
 	return render(request, "AmazonBotSites/home.html", {"prodlist":prodlist})
 
 def createprodlist(request):
@@ -44,10 +49,15 @@ def list(request):
 		serch = request.POST['searchinput']
 		product = Product.objects.filter(name__icontains=serch)
   
-	elif 'item' in request.POST and 'item' in request.POST:
+	elif request.method == "POST" and 'item' in request.POST:
 		itemid = request.POST.get("item")
+		target_price = request.POST.get("pricetarget")
 		item = Product.objects.get(id=itemid)
-		Traking.objects.create(ID_Product = item, ID_User = request.user, target_price=152.0)
+
+		if not Traking.objects.filter(ID_Product__exact = item, ID_User__exact = request.user):
+			Traking.objects.create(ID_Product = item, ID_User = request.user, target_price=target_price)
+		else:
+			return redirect("tracked")
 
 		product = Product.objects.all()
   
@@ -76,6 +86,7 @@ def prodpricedata(request, id, *keyword, **kwargs):
 
 	data = {
 		"prices": [i.price for i in prices],
-  		"date": [i.datetime for i in prices]
+  		"date": [i.datetime.strftime("%Y-%m-%d") for i in prices]
 	}
+
 	return JsonResponse(data)

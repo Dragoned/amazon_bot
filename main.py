@@ -56,12 +56,15 @@ import logging
 import re
 import threading
 import webbrowser
+
+from time import time, sleep
+from sqlite3 import Time
 from datetime import datetime
 from os import execlp
 
-import matplotlib.pyplot as plt
 import mysql.connector
 import requests
+
 from bs4 import BeautifulSoup
 from pypika import Field, MySQLQuery, Query, Table
 
@@ -281,12 +284,12 @@ class amazonpy():
             if not price or price == "":
                 return
 
-            if not re.findall("[0-9]+,[0,9]+", price):
-                price = "0.0€"
+            # if not re.findall("[0-9]+,[0,9]+", price):
+            #    price = "0.0€"
 
             # price convertion to string to float
-            price = price.replace(',', '.')
-            price = re.findall("[0-9]+.[0,9]+", price)[0]
+            #price = price.replace(',', '.')
+            #price = re.findall("[0-9]+.[0,9]+", price)[0]
             converted_price = float(price)
 
             # add price to db
@@ -308,17 +311,31 @@ class amazonpy():
             print(f'{x + 1}. {self.product[x]["productname"]}\n')
 
     def find_price(self, page):
-        # 1st try
         soup = BeautifulSoup(page.content, 'html.parser')
 
+        """
         for query in self.settings["serchQuery"]:
             price = soup.find(class_=query)
             if not (price == None or price == ""):
-                return price.get_text()
+                return price.get_text()        
+        """
+        inter = soup.find(class_="a-price-whole")
+        if (inter == None or inter == ""):
+            logging.warning('prenzo non trovato verra effetuato un report')
+            logging.warning(page.url)
+            return "0.0"
 
-        logging.warn('prenzo non trovato verra effetuato un report')
-        logging.warn(page.url)
-        return "0.0€"
+        decimal = soup.find(class_="a-price-fraction")
+        if (decimal == None or decimal == ""):
+            logging.warning('prenzo non trovato verra effetuato un report')
+            logging.warning(page.url)
+            return "0.0"
+
+        price = inter.get_text().replace(",", "")+"."+decimal.get_text()
+
+        print(price)
+
+        return price
 
     def start_continuous_fetch(self):
         prodtable = Table('AmazonBotSites_product')
@@ -332,24 +349,16 @@ class amazonpy():
 
         logging.info("numero prodotti: "+str(len(self.product)))
         for prod in self.product:
+            sleep(1)
             self.new_detection(prod)
 
         self.product = None
 
-        t = threading.Timer(60*5, self.start_continuous_fetch)
+        delay = (self.settings["delay"]["houre"]*60 + self.settings["delay"]
+                 ["minutes"])*60 + self.settings["delay"]["second"]
+
+        t = threading.Timer(delay, self.start_continuous_fetch)
         t.start()
-
-    def drow_graph(self, i):
-        # todo: fix plot data
-        fig, ax = plt.subplots()
-
-        prices = []
-
-        for price in self.product[i]["detectionprice"]:
-            prices.append(price["price"])
-
-        n, bins, patches = ax.hist(prices, len(self.product), density=True)
-        plt.show()
 
 
 bot = amazonpy()
@@ -358,7 +367,7 @@ bot = amazonpy()
 def main():
     t1 = threading.Timer(0, bot.start_continuous_fetch)
     #t2 = threading.Timer(0, bot.url_menu)
-    #t2.start()
+    # t2.start()
     t1.start()
 
 
